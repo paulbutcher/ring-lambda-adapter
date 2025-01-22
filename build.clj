@@ -7,33 +7,36 @@
 (def version (format "1.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 
-(defn- pom-template [version]
+(defn- pom-template
+  [version]
   [[:description "Clojure Ring adapter for AWS Lambda."]
    [:url "https://github.com/paulbutcher/ring-lambda-adapter"]
    [:licenses
-    [:license
-     [:name "Eclipse Public License"]
+    [:license [:name "Eclipse Public License"]
      [:url "http://www.eclipse.org/legal/epl-v10.html"]]]
-   [:developers
-    [:developer
-     [:name "Paul Butcher"]]]
-   [:scm
-    [:url "https://github.com/paulbutcher/ring-lambda-adapter"]
-    [:connection "scm:git:https://github.com/paulbutcher/ring-lambda-adapter.git"]
-    [:developerConnection "scm:git:ssh:git@github.com:paulbutcher/ring-lambda-adapter.git"]
+   [:developers [:developer [:name "Paul Butcher"]]]
+   [:scm [:url "https://github.com/paulbutcher/ring-lambda-adapter"]
+    [:connection
+     "scm:git:https://github.com/paulbutcher/ring-lambda-adapter.git"]
+    [:developerConnection
+     "scm:git:ssh:git@github.com:paulbutcher/ring-lambda-adapter.git"]
     [:tag (str "v" version)]]])
 
-(defn- jar-opts [opts]
+(defn- jar-opts
+  [opts]
   (assoc opts
-          :lib lib   :version version
-          :jar-file  (format "target/%s-%s.jar" lib version)
-          :basis     (b/create-basis {})
-          :class-dir class-dir
-          :target    "target"
-          :src-dirs  ["src"]
-          :pom-data  (pom-template version)))
+    :lib lib
+    :version version
+    :jar-file (format "target/%s-%s.jar" lib version)
+    :basis (b/create-basis {})
+    :class-dir class-dir
+    :target "target"
+    :src-dirs ["src"]
+    :pom-data (pom-template version)))
 
-(defn ^:export ci "Build the JAR." [opts]
+(defn ^:export ci
+  "Build the JAR."
+  [opts]
   (b/delete {:path "target"})
   (let [opts (jar-opts opts)]
     (println "\nWriting pom.xml...")
@@ -44,13 +47,17 @@
     (b/jar opts))
   opts)
 
-(defn ^:export install "Install the JAR locally." [opts]
-  (let [opts (jar-opts opts)]
-    (b/install opts))
+(defn ^:export install
+  "Install the JAR locally."
+  [opts]
+  (let [opts (jar-opts opts)] (b/install opts))
   opts)
 
-(defn ^:export deploy "Deploy the JAR to Clojars." [opts]
+(defn ^:export deploy
+  "Deploy the JAR to Clojars."
+  [opts]
   (let [{:keys [jar-file] :as opts} (jar-opts opts)]
-    (dd/deploy {:installer :remote :artifact (b/resolve-path jar-file)
+    (dd/deploy {:installer :remote
+                :artifact (b/resolve-path jar-file)
                 :pom-file (b/pom-path (select-keys opts [:lib :class-dir]))}))
   opts)
