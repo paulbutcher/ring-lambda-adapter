@@ -1,5 +1,7 @@
 # paulbutcher/ring-lambda-adapter
 
+[![Clojars Project](https://img.shields.io/clojars/v/com.paulbutcher/ring-lambda-adapter.svg)](https://clojars.org/com.paulbutcher/ring-lambda-adapter)
+
 Clojure Ring adapter for AWS Lambda.
 
 ## Usage
