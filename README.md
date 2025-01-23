@@ -15,6 +15,7 @@ Example usage:
   (:gen-class :implements
               [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:require [paulbutcher.ring-lambda-adapter :refer [handle-request]]))
+
 (defn -handleRequest [_ is os _context] (handle-request my-application/app is os))
 ```
 
